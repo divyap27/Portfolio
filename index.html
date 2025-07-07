@@ -1,0 +1,696 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Divya Pawar - Portfolio</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700&display=swap" rel="stylesheet">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://kit.fontawesome.com/a076d05399.js" crossorigin="anonymous"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" />
+
+    <link rel="icon" type="image/png" href="/path/to/your/favicon.png"> 
+    <style>
+        /* Global styles */
+        body {
+            font-family: 'Inter', sans-serif;
+        }
+        /* Typing effect */
+        .typing-effect {
+            overflow: hidden;
+            white-space: nowrap;
+            border-right: 2px solid #fff;
+            animation: typing 3s steps(20, end), blink-caret 0.75s step-end infinite;
+        }
+        @keyframes typing {
+            from { width: 0; }
+            to { width: 100%; }
+        }
+        @keyframes blink-caret {
+            from, to { border-color: transparent; }
+            50% { border-color: white; }
+        }
+        /* Skill bar animation */
+        .skill-bar {
+            height: 24px;
+            background-color: #e5e7eb;
+            border-radius: 12px;
+            overflow: hidden;
+            opacity: 0;
+            transform: translateY(20px);
+            transition: opacity 0.5s ease, transform 0.5s ease;
+        }
+        .skill-bar.visible {
+            opacity: 1;
+            transform: translateY(0);
+        }
+        .skill-level {
+            height: 100%;
+            background-color: #10b981;
+            border-radius: 12px;
+            width: 0;
+            transition: width 1.5s ease-in-out;
+        }
+        .skill-bar.visible .skill-level {
+            width: var(--skill-width);
+        }
+        /* Profile image background animation */
+        .profile-img-container {
+            position: relative;
+            width: 300px;
+            height: 300px;
+            margin: 0 auto;
+        }
+        .profile-img {
+            animation: 3s ease-in-out infinite;
+            z-index: 10;
+            position: relative;
+        }
+        .profile-img-bg {
+            position: absolute;
+            top: -10px;
+            left: -10px;
+            width: 320px;
+            height: 320px;
+            background: linear-gradient(45deg, #3b82f6, #8b5cf6, #10b981, #3b82f6);
+            background-size: 400%;
+            border-radius: 50%;
+            animation: gradientRotate 8s linear infinite;
+            z-index: 5;
+        }
+        @keyframes gradientRotate {
+            0% { background-position: 0% 50%; }
+            50% { background-position: 400% 50%; }
+            100% { background-position: 0% 50%; }
+        }
+        @keyframes float {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-10px); }
+        }
+        /* Dialog box */
+        .dialog {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.8);
+            z-index: 1000;
+            align-items: center;
+            justify-content: center;
+        }
+        .dialog-content {
+            background: white;
+            padding: 24px;
+            border-radius: 12px;
+            max-width: 90%;
+            max-height: 90%;
+            overflow: auto;
+            transform: scale(0.8);
+            transition: transform 0.3s ease;
+        }
+        .dialog[style*="display: flex"] .dialog-content {
+            transform: scale(1);
+        }
+        /* Hover effects for cards */
+        .cert-card, .project-card {
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+            border: 1px solid #e5e7eb;
+        }
+        .cert-card:hover, .project-card:hover {
+            transform: scale(1.03);
+            box-shadow: 0 12px 24px rgba(0, 0, 0, 0.15);
+        }
+        /* Button hover effect */
+        .btn-hover {
+            transition: background-color 0.3s ease, transform 0.2s ease, box-shadow 0.3s ease;
+        }
+        .btn-hover:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        }
+        /* Section fade-in animation */
+        section {
+            opacity: 0;
+            transform: translateY(20px);
+            transition: opacity 0.6s ease, transform 0.6s ease;
+        }
+        section.visible {
+            opacity: 1;
+            transform: translateY(0);
+        }
+        /* Tooltip styles */
+        .tooltip {
+            position: relative;
+        }
+        .tooltip:hover:after {
+            content: attr(data-tooltip);
+            position: absolute;
+            bottom: 100%;
+            left: 50%;
+            transform: translateX(-50%);
+            background: #1f2937;
+            color: white;
+            padding: 6px 12px;
+            border-radius: 6px;
+            font-size: 12px;
+            white-space: nowrap;
+            z-index: 10;
+        }
+        /* Mobile menu styles */
+        #mobile-menu {
+            display: none;
+        }
+        @media (max-width: 768px) {
+            #mobile-menu {
+                display: block;
+            }
+            .nav-links {
+                display: none;
+                flex-direction: column;
+                position: absolute;
+                top: 64px;
+                left: 0;
+                width: 100%;
+                background: #1e40af;
+                padding: 16px;
+            }
+            .nav-links.active {
+                display: flex;
+            }
+        }
+        /* Form error and success styles */
+        .error {
+            border-color: #ef4444;
+        }
+        .error-message {
+            color: #ef4444;
+            font-size: 12px;
+            margin-top: 4px;
+        }
+        .success-message {
+            color: #10b981;
+            font-size: 14px;
+            margin-top: 8px;
+            text-align: center;
+        }
+    </style>
+</head>
+<body class="bg-gray-50 font-sans">
+    <nav class="bg-blue-700 text-white p-4 sticky top-0 z-50 shadow-lg" role="navigation" aria-label="Main navigation">
+        <div class="container mx-auto flex justify-between items-center">
+            <h1 class="text-2xl font-bold">Divya Pawar</h1>
+            <button id="mobile-menu" class="md:hidden focus:outline-none" aria-label="Toggle menu">
+                <i class="fas fa-bars text-2xl"></i>
+            </button>
+            <ul class="nav-links flex space-x-6 md:flex hidden">
+                <li><a href="#home" class="hover:text-gray-200 transition duration-300 font-medium" aria-label="Go to Home section">Home</a></li>
+                <li><a href="#about" class="hover:text-gray-200 transition duration-300 font-medium" aria-label="Go to About section">About</a></li>
+                <li><a href="#certifications" class="hover:text-gray-200 transition duration-300 font-medium" aria-label="Go to Certifications section">Certifications</a></li>
+                <li><a href="#projects" class="hover:text-gray-200 transition duration-300 font-medium" aria-label="Go to Projects section">Projects</a></li>
+                <li><a href="#contact" class="hover:text-gray-200 transition duration-300 font-medium" aria-label="Go to Contact section">Contact</a></li>
+            </ul>
+        </div>
+    </nav>
+
+    <main>
+        <section id="home" class="min-h-screen flex items-center justify-center bg-gradient-to-r from-blue-600 to-purple-700" aria-labelledby="home-heading">
+            <div class="container mx-auto flex flex-col md:flex-row items-center px-4">
+                <div class="md:w-1/2 text-center md:text-left text-white">
+<h2 id="home-heading" class="text-4xl md:text-5xl font-bold mb-4">Hi, I'm Divya Pawar</h2>
+<p class="text-4xl md:text-3xl font-bold mb-6 text-white">
+  <span id="typing-text" class="typing-effect"></span>
+</p>
+
+
+                    <div class="flex space-x-4 justify-center md:justify-start">
+                        <a href="#contact" class="bg-white text-blue-700 px-6 py-3 rounded-full hover:bg-gray-100 transition duration-300 btn-hover font-medium" aria-label="Navigate to contact section">Get in Touch</a>
+                        <a href="Divya_Pawar_Resume.pdf" download class="bg-white text-blue-700 px-6 py-3 rounded-full hover:bg-gray-100 transition duration-300 btn-hover font-medium" aria-label="Download resume">Download Resume</a>
+                    </div>
+                    <div class="mt-6 flex space-x-4 justify-center md:justify-start">
+                        <a href="https://www.linkedin.com/in/divya-pawar-11076922b/" target="_blank" rel="noopener noreferrer" class="text-white hover:text-gray-200 transition duration-300 tooltip" data-tooltip="LinkedIn Profile" aria-label="Visit LinkedIn Profile"><i class="fab fa-linkedin text-3xl"></i></a>
+                        <a href="https://github.com/divyap27" target="_blank" rel="noopener noreferrer" class="text-white hover:text-gray-200 transition duration-300 tooltip" data-tooltip="GitHub Profile" aria-label="Visit GitHub Profile"><i class="fab fa-github text-3xl"></i></a>
+                        <a href="https://www.hackerrank.com/profile/pawardivya221" target="_blank" rel="noopener noreferrer" class="text-white hover:text-gray-200 transition duration-300 tooltip" data-tooltip="HackerRank Profile" aria-label="Visit HackerRank Profile"><i class="fab fa-hackerrank text-3xl"></i></a>
+                    </div>
+                </div>
+                <div class="md:w-1/2 mt-8 md:mt-0">
+                    <div class="profile-img-container">
+                        <div class="profile-img-bg"></div>
+                        <img src="Project12\images\DP.jpg" alt="Divya Pawar - Software Engineer" class="rounded-full mx-auto profile-img w-72 h-72 object-cover">
+                    </div>
+                </div>
+            </div>
+        </section>
+
+<section id="about" class="py-20 bg-gradient-to-br from-blue-300 via-purple-300 to-green-300">
+  <div class="container mx-auto px-6 md:px-12">
+    <h2 id="about-heading" class="text-4xl md:text-5xl font-bold text-center mb-16 text-gray-800">About Me</h2>
+
+    <div class="flex flex-col items-center space-y-12">
+      <!-- About Text -->
+      <div class="w-full md:w-3/4 bg-white rounded-xl shadow-md p-6 md:p-10 text-gray-700">
+        <p class="text-lg md:text-xl leading-relaxed mb-6">
+          I'm <strong>Divya Pawar</strong>, a passionate <strong>Software Engineer</strong> and <strong>Developer</strong> with a knack for building responsive and user-friendly applications. I specialize in <strong>Java</strong>, <strong>Python</strong>, <strong>JavaScript</strong>, and front-end technologies like <strong>HTML</strong>, <strong>CSS</strong>, and <strong>Angular</strong>. As a quick learner and collaborative worker, I thrive in team-based environments and enjoy tackling complex challenges.
+        </p>
+        <p class="text-lg md:text-xl leading-relaxed">
+          My internships at <strong>LeopardRuns Innovation and Technology</strong> and <strong>Revolution IT Solutions</strong> helped me hone my skills in backend and front-end development. I'm certified in <strong>Java Full Stack Development</strong> and <strong>AWS Cloud Foundations</strong>, and I'm always eager to learn new technologies.
+        </p>
+      </div>
+
+      <!-- Skills Section -->
+      <div class="w-full md:w-3/4 bg-white rounded-xl shadow-md p-6 md:p-10">
+<h3 class="text-2xl font-semibold mb-6 text-gray-800 flex items-center gap-3">
+  <i class="fas fa-laptop-code"></i>  Skills
+</h3>
+        <div class="space-y-6">
+          <div>
+            <p class="text-gray-700 font-medium">Java <span class="float-right text-sm">85%</span></p>
+            <div class="skill-bar"><div class="skill-level" style="--skill-width: 85%"></div></div>
+          </div>
+          <div>
+            <p class="text-gray-700 font-medium">Python <span class="float-right text-sm">80%</span></p>
+            <div class="skill-bar"><div class="skill-level" style="--skill-width: 80%"></div></div>
+          </div>
+          <div>
+            <p class="text-gray-700 font-medium">JavaScript <span class="float-right text-sm">75%</span></p>
+            <div class="skill-bar"><div class="skill-level" style="--skill-width: 75%"></div></div>
+          </div>
+          <div>
+            <p class="text-gray-700 font-medium">HTML/CSS <span class="float-right text-sm">90%</span></p>
+            <div class="skill-bar"><div class="skill-level" style="--skill-width: 90%"></div></div>
+          </div>
+          <div>
+            <p class="text-gray-700 font-medium">Angular <span class="float-right text-sm">70%</span></p>
+            <div class="skill-bar"><div class="skill-level" style="--skill-width: 70%"></div></div>
+          </div>
+          <div>
+            <p class="text-gray-700 font-medium">SQL <span class="float-right text-sm">65%</span></p>
+            <div class="skill-bar"><div class="skill-level" style="--skill-width: 65%"></div></div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+
+        <section id="certifications" class="py-20 bg-gradient-to-br from-blue-300 via-purple-300 to-green-300" aria-labelledby="certifications-heading">
+            <div class="container mx-auto px-4">
+                <h2 id="certifications-heading" class="text-3xl md:text-4xl font-bold text-center mb-12 text-gray-800">Certifications</h2>
+                <div id="certifications-grid" class="grid grid-cols-1 md:grid-cols-3 gap-6">
+                    <div class="bg-white p-6 rounded-lg shadow-md cursor-pointer cert-card" onclick="showCertificate('Java Full Stack Development', 'Vinsys IT Services in partnership with Generation India', 'https://via.placeholder.com/400', 'Completed a comprehensive course covering Java, Spring Boot, Angular, and full-stack development practices.')" role="button" aria-label="View Java Full Stack Development certificate">
+                        <img src="Project12\images\javaf.png" alt="Java Full Stack Development Certification" class="w-full h-40 object-cover rounded-lg mb-4">
+                        <h3 class="text-xl font-semibold text-blue-600">Java Full Stack Development</h3>
+                        <p class="text-gray-600">Vinsys IT Services</p>
+                    </div>
+                    <div class="bg-white p-6 rounded-lg shadow-md cursor-pointer cert-card" onclick="showCertificate('AWS Cloud Foundation Certificate', 'Amazon Web Services (AWS)', 'https://via.placeholder.com/400', 'Gained foundational knowledge in AWS cloud services and infrastructure.')" role="button" aria-label="View AWS Cloud Foundation Certificate">
+                        <img src="Project12\images\aws.png" alt="AWS Cloud Foundation Certificate" class="w-full h-40 object-cover rounded-lg mb-4">
+                        <h3 class="text-xl font-semibold text-blue-600">AWS Cloud Foundation Certificate</h3>
+                        <p class="text-gray-600">Amazon Web Services</p>
+                    </div>
+                    <div class="bg-white p-6 rounded-lg shadow-md cursor-pointer cert-card" onclick="showCertificate('Python Programming', 'Coursera', 'https://via.placeholder.com/400', 'Mastered Python programming fundamentals and advanced concepts.')" role="button" aria-label="View Python Programming certificate">
+                        <img src="Project12\images\bs.png" alt="Python Programming Certification" class="w-full h-40 object-cover rounded-lg mb-4">
+                        <h3 class="text-xl font-semibold text-blue-600">Bootstrap</h3>
+                        <p class="text-gray-600">Codeacademy</p>
+                    </div>
+                    <div class="bg-white p-6 rounded-lg shadow-md cursor-pointer cert-card hidden" onclick="showCertificate('Web Development Bootcamp', 'Udemy', 'https://via.placeholder.com/400', 'Learned modern web development with HTML, CSS, and JavaScript.')" role="button" aria-label="View Web Development Bootcamp certificate">
+                        <img src="Project12\images\ang.png" alt="Web Development Bootcamp Certification" class="w-full h-40 object-cover rounded-lg mb-4">
+                        <h3 class="text-xl font-semibold text-blue-600">Angular</h3>
+                        <p class="text-gray-600">Codeacademy</p>
+                    </div>
+                </div>
+                <div class="text-center mt-8">
+                    <button id="load-more-certs" class="bg-blue-600 text-white px-6 py-3 rounded-full hover:bg-blue-700 btn-hover font-medium" aria-label="Show more certifications">Load More</button>
+                    <button id="load-less-certs" class="bg-blue-600 text-white px-6 py-3 rounded-full hover:bg-blue-700 btn-hover font-medium hidden" aria-label="Show fewer certifications">Load Less</button>
+                </div>
+            </div>
+            <div id="certificate-dialog" class="dialog" role="dialog" aria-labelledby="cert-title" aria-modal="true">
+                <div class="dialog-content text-center">
+                    <h3 id="cert-title" class="text-2xl font-semibold mb-4 text-gray-800"></h3>
+                    <img id="cert-image" src="" alt="Certificate" class="max-w-full h-auto mb-4 rounded-lg shadow">
+                    <p id="cert-issuer" class="text-gray-600 mb-4"></p>
+                    <p id="cert-description" class="text-gray-600 mb-4"></p>
+                    <button onclick="closeCertificate()" class="bg-blue-600 text-white px-6 py-3 rounded-full hover:bg-blue-700 btn-hover font-medium" aria-label="Close certificate dialog">Close</button>
+                </div>
+            </div>
+        </section>
+
+        <section id="projects" class="py-20 bg-gradient-to-br from-blue-300 via-purple-300 to-green-300" aria-labelledby="projects-heading">
+            <div class="container mx-auto px-4">
+                <h2 id="projects-heading" class="text-3xl md:text-4xl font-bold text-center mb-12 text-gray-800">Projects</h2>
+                <div id="projects-grid" class="grid grid-cols-1 md:grid-cols-3 gap-6">
+                    <div class="bg-white p-6 rounded-lg shadow-md project-card">
+                        <img src="https://plus.unsplash.com/premium_photo-1676057060928-c717a8e96784?q=80&w=1316&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D" alt="LoopsSphere Chat Application" class="w-full h-40 object-cover rounded-lg mb-4">
+                        <h3 class="text-xl font-semibold text-blue-600">LoopsSphere - Chat Application</h3>
+                        <p class="text-gray-600 text-sm">Tech Stack: Java, Spring Boot, HTML, CSS, Angular, Bootstrap</p>
+                        <p class="mt-2 text-gray-600">A real-time chat application with one-to-one messaging and user authentication, featuring RESTful APIs and a responsive UI.</p>
+                        <div class="mt-4 flex space-x-4">
+                            <a href="https://github.com/divya-pawar/loopsphere" target="_blank" rel="noopener noreferrer" class="bg-blue-600 text-white px-4 py-2 rounded-full hover:bg-blue-700 btn-hover font-medium tooltip" data-tooltip="View source code" aria-label="View LoopsSphere source code on GitHub">Code</a>
+                            <a href="https://loopsphere.demo" target="_blank" rel="noopener noreferrer" class="bg-green-600 text-white px-4 py-2 rounded-full hover:bg-green-700 btn-hover font-medium tooltip" data-tooltip="View live demo" aria-label="View LoopsSphere live demo">Live</a>
+                        </div>
+                    </div>
+                    
+                    <div class="bg-white p-6 rounded-lg shadow-md project-card">
+                        <img src="https://plus.unsplash.com/premium_photo-1743771811004-04c08209d423?q=80&w=1332&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D" alt="Number Guessing Game" class="w-full h-40 object-cover rounded-lg mb-4">
+                        <h3 class="text-xl font-semibold text-blue-600">Number Guessing Game</h3>
+                        <p class="text-gray-600 text-sm">Tech Stack: HTML, CSS, JavaScript</p>
+                        <p class="mt-2 text-gray-600">A browser-based game challenging users to guess a random number with live feedback.</p>
+                        <div class="mt-4 flex space-x-4">
+                            <a href="https://github.com/divyap27/Number-Guessing-Game" target="_blank" rel="noopener noreferrer" class="bg-blue-600 text-white px-4 py-2 rounded-full hover:bg-blue-700 btn-hover font-medium tooltip" data-tooltip="View source code" aria-label="View Number Guessing Game source code on GitHub">Code</a>
+                            <a href="https://divyap27.github.io/Number-Guessing-Game/" target="_blank" rel="noopener noreferrer" class="bg-green-600 text-white px-4 py-2 rounded-full hover:bg-green-700 btn-hover font-medium tooltip" data-tooltip="View live demo" aria-label="View Number Guessing Game live demo">Live</a>
+                        </div>
+                    </div>
+                    <div class="bg-white p-6 rounded-lg shadow-md project-card hidden">
+                        <img src="https://images.unsplash.com/photo-1734803907595-14a31a8b5bea?q=80&w=1089&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D" alt="Colmar Academy Website" class="w-full h-40 object-cover rounded-lg mb-4">
+                        <h3 class="text-xl font-semibold text-blue-600">Colmar Academy</h3>
+                        <p class="text-gray-600 text-sm">Tech Stack: HTML, CSS</p>
+                        <p class="mt-2 text-gray-600">A responsive educational website showcasing courses and campus information.</p>
+                        <div class="mt-4 flex space-x-4">
+                            <a href="https://github.com/divyap27/Colmar-Academy" target="_blank" rel="noopener noreferrer" class="bg-blue-600 text-white px-4 py-2 rounded-full hover:bg-blue-700 btn-hover font-medium tooltip" data-tooltip="View source code" aria-label="View Colmar Academy source code on GitHub">Code</a>
+                            <a href="https://divyap27.github.io/Colmar-Academy/" target="_blank" rel="noopener noreferrer" class="bg-green-600 text-white px-4 py-2 rounded-full hover:bg-green-700 btn-hover font-medium tooltip" data-tooltip="View live demo" aria-label="View Colmar Academy live demo">Live</a>
+                        </div>
+                    </div>
+                    <div class="bg-white p-6 rounded-lg shadow-md project-card hidden">
+                        <img src="https://images.unsplash.com/photo-1469854523086-cc02fe5d8800?q=80&w=1121&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D" alt="Excursion Travel App" class="w-full h-40 object-cover rounded-lg mb-4">
+                        <h3 class="text-xl font-semibold text-blue-600">Excursion</h3>
+                        <p class="text-gray-600 text-sm">Tech Stack: HTML, CSS, JavaScript</p>
+                        <p class="mt-2 text-gray-600">A promotional website for a travel app with engaging visuals and interactivity.</p>
+                        <div class="mt-4 flex space-x-4">
+                            <a href="https://github.com/divyap27/Excursion" target="_blank" rel="noopener noreferrer" class="bg-blue-600 text-white px-4 py-2 rounded-full hover:bg-blue-700 btn-hover font-medium tooltip" data-tooltip="View source code" aria-label="View Excursion source code on GitHub">Code</a>
+                            <a href="https://divyap27.github.io/Excursion/" target="_blank" rel="noopener noreferrer" class="bg-green-600 text-white px-4 py-2 rounded-full hover:bg-green-700 btn-hover font-medium tooltip" data-tooltip="View live demo" aria-label="View Excursion live demo">Live</a>
+                        </div>
+                    </div>
+                    <div class="bg-white p-6 rounded-lg shadow-md project-card hidden">
+                        <img src="https://images.unsplash.com/photo-1612287230202-1ff1d85d1bdf?q=80&w=1171&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D" alt="Rock-Paper-Scissors Game" class="w-full h-40 object-cover rounded-lg mb-4">
+                        <h3 class="text-xl font-semibold text-blue-600">Rock-Paper-Scissors Game</h3>
+                        <p class="text-gray-600 text-sm">Tech Stack: HTML, CSS, JavaScript</p>
+                        <p class="mt-2 text-gray-600">An interactive game with dynamic logic and user-friendly design.</p>
+                        <div class="mt-4 flex space-x-4">
+                            <a href="https://github.com/divyap27/rock-paper-scissors-game" target="_blank" rel="noopener noreferrer" class="bg-blue-600 text-white px-4 py-2 rounded-full hover:bg-blue-700 btn-hover font-medium tooltip" data-tooltip="View source code" aria-label="View Rock-Paper-Scissors Game source code on GitHub">Code</a>
+                            <a href="https://divyap27.github.io/rock-paper-scissors-game/" target="_blank" rel="noopener noreferrer" class="bg-green-600 text-white px-4 py-2 rounded-full hover:bg-green-700 btn-hover font-medium tooltip" data-tooltip="View live demo" aria-label="View Rock-Paper-Scissors Game live demo">Live</a>
+                        </div>
+                    </div>
+                    <div class="bg-white p-6 rounded-lg shadow-md project-card hidden">
+                        <img src="https://images.unsplash.com/photo-1520523839897-bd0b52f945a0?q=80&w=1170&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D" alt="Piano Player Web App" class="w-full h-40 object-cover rounded-lg mb-4">
+                        <h3 class="text-xl font-semibold text-blue-600">Piano Player</h3>
+                        <p class="text-gray-600 text-sm">Tech Stack: HTML, CSS, JavaScript</p>
+                        <p class="mt-2 text-gray-600">A virtual piano with interactive keys and sound effects.</p>
+                        <div class="mt-4 flex space-x-4">
+                            <a href="https://github.com/divyap27/Piano" target="_blank" rel="noopener noreferrer" class="bg-blue-600 text-white px-4 py-2 rounded-full hover:bg-blue-700 btn-hover font-medium tooltip" data-tooltip="View source code" aria-label="View Piano Player source code on GitHub">Code</a>
+                            <a href="https://divyap27.github.io/Piano/" target="_blank" rel="noopener noreferrer" class="bg-green-600 text-white px-4 py-2 rounded-full hover:bg-green-700 btn-hover font-medium tooltip" data-tooltip="View live demo" aria-label="View Piano Player live demo">Live</a>
+                        </div>
+                    </div>
+                    <div class="bg-white p-6 rounded-lg shadow-md project-card hidden">
+                        <img src="https://plus.unsplash.com/premium_photo-1678309914508-75dc4e854a8a?q=80&w=1170&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D" alt="Temperature Converter Tool" class="w-full h-40 object-cover rounded-lg mb-4">
+                        <h3 class="text-xl font-semibold text-blue-600">Temperature Converter</h3>
+                        <p class="text-gray-600 text-sm">Tech Stack: HTML, CSS, JavaScript</p>
+                        <p class="mt-2 text-gray-600">A tool for converting temperatures between Celsius and Fahrenheit with a clean interface.</p>
+                        <div class="mt-4 flex space-x-4">
+                            <a href="https://github.com/divyap27/Temparature-Converter" target="_blank" rel="noopener noreferrer" class="bg-blue-600 text-white px-4 py-2 rounded-full hover:bg-blue-700 btn-hover font-medium tooltip" data-tooltip="View source code" aria-label="View Temperature Converter source code on GitHub">Code</a>
+                            <a href="https://divyap27.github.io/Temparature-Converter/" target="_blank" rel="noopener noreferrer" class="bg-green-600 text-white px-4 py-2 rounded-full hover:bg-green-700 btn-hover font-medium tooltip" data-tooltip="View live demo" aria-label="View Temperature Converter live demo">Live</a>
+                        </div>
+                    </div>
+                </div>
+                <div class="text-center mt-8">
+                    <button id="load-more-projects" class="bg-blue-600 text-white px-6 py-3 rounded-full hover:bg-blue-700 btn-hover font-medium" aria-label="Show more projects">Load More</button>
+                    <button id="load-less-projects" class="bg-blue-600 text-white px-6 py-3 rounded-full hover:bg-blue-700 btn-hover font-medium hidden" aria-label="Show fewer projects">Load Less</button>
+                </div>
+            </div>
+        </section>
+
+        <section id="contact" class="py-20 bg-gradient-to-br from-blue-300 via-purple-300 to-green-300" aria-labelledby="contact-heading">
+            <div class="container mx-auto px-4">
+                <h2 id="contact-heading" class="text-3xl md:text-4xl font-bold text-center mb-12 text-gray-800">Contact Me</h2>
+                <div class="max-w-md mx-auto bg-white p-8 rounded-lg shadow-md">
+                    <form id="contact-form" aria-label="Contact form">
+                        <div class="mb-6">
+                            <label for="name" class="block text-gray-700 font-semibold mb-2">Name</label>
+                            <input type="text" id="name" name="name" class="w-full p-3 border rounded-lg focus:ring-2 focus:ring-blue-600 focus:outline-none" required aria-describedby="name-error">
+                            <p id="name-error" class="error-message hidden">Please enter a valid name.</p>
+                        </div>
+                        <div class="mb-6">
+                            <label for="email" class="block text-gray-700 font-semibold mb-2">Email</label>
+                            <input type="email" id="email" name="email" class="w-full p-3 border rounded-lg focus:ring-2 focus:ring-blue-600 focus:outline-none" required aria-describedby="email-error">
+                            <p id="email-error" class="error-message hidden">Please enter a valid email address.</p>
+                        </div>
+                        <div class="mb-6">
+                            <label for="message" class="block text-gray-700 font-semibold mb-2">Message</label>
+                            <textarea id="message" name="message" class="w-full p-3 border rounded-lg focus:ring-2 focus:ring-blue-600 focus:outline-none" rows="5" required aria-describedby="message-error"></textarea>
+                            <p id="message-error" class="error-message hidden">Please enter a message.</p>
+                        </div>
+                        <button type="submit" class="bg-blue-600 text-white px-6 py-3 rounded-full hover:bg-blue-700 btn-hover w-full font-medium" aria-label="Send message">Send Message</button>
+                        <p id="form-success" class="success-message hidden">Message sent successfully! I'll get back to you soon.</p>
+                    </form>
+                    <div class="mt-6 flex justify-center space-x-6">
+                        <a href="mailto:divyapawar@example.com" class="text-blue-600 hover:text-blue-800 transition duration-300 tooltip" data-tooltip="Send me an Email" aria-label="Send an email"><i class="fas fa-envelope text-3xl"></i></a>
+                        <a href="https://www.linkedin.com/in/divya-pawar-11076922b/" target="_blank" rel="noopener noreferrer" class="text-blue-600 hover:text-blue-800 transition duration-300 tooltip" data-tooltip="LinkedIn Profile" aria-label="Visit LinkedIn Profile"><i class="fab fa-linkedin text-3xl"></i></a>
+                        <a href="https://github.com/divyap27" target="_blank" rel="noopener noreferrer" class="text-blue-600 hover:text-blue-800 transition duration-300 tooltip" data-tooltip="GitHub Profile" aria-label="Visit GitHub Profile"><i class="fab fa-github text-3xl"></i></a>
+                        <a href="https://www.hackerrank.com/profile/pawardivya221" target="_blank" rel="noopener noreferrer" class="text-blue-600 hover:text-blue-800 transition duration-300 tooltip" data-tooltip="HackerRank Profile" aria-label="Visit HackerRank Profile"><i class="fab fa-hackerrank text-3xl"></i></a>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <footer class="bg-blue-700 text-white text-center p-6" aria-label="Footer">
+        <div class="container mx-auto">
+            <p class="mb-2 text-sm">© 2025 Divya Pawar. All rights reserved.</p>
+            <div class="flex justify-center space-x-6">
+                <a href="https://linkedin.com/in/divya-pawar" target="_blank" rel="noopener noreferrer" class="hover:text-gray-200 transition duration-300 tooltip" data-tooltip="LinkedIn Profile" aria-label="Visit LinkedIn Profile"><i class="fab fa-linkedin text-2xl"></i></a>
+                <a href="https://github.com/divya-pawar" target="_blank" rel="noopener noreferrer" class="hover:text-gray-200 transition duration-300 tooltip" data-tooltip="GitHub Profile" aria-label="Visit GitHub Profile"><i class="fab fa-github text-2xl"></i></a>
+                <a href="https://hackerrank.com/divya-pawar" target="_blank" rel="noopener noreferrer" class="hover:text-gray-200 transition duration-300 tooltip" data-tooltip="HackerRank Profile" aria-label="Visit HackerRank Profile"><i class="fab fa-hackerrank text-2xl"></i></a>
+            </div>
+        </div>
+    </footer>
+
+    <script>
+        // Mobile menu toggle
+        document.getElementById('mobile-menu').addEventListener('click', function() {
+            document.querySelector('.nav-links').classList.toggle('active');
+        });
+
+        // Intersection Observer for section fade-in animation
+        const sections = document.querySelectorAll('section');
+        const observerOptions = {
+            root: null,
+            rootMargin: '0px',
+            threshold: 0.1
+        };
+
+        const sectionObserver = new IntersectionObserver((entries, observer) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.classList.add('visible');
+                    observer.unobserve(entry.target);
+                }
+            });
+        }, observerOptions);
+
+        sections.forEach(section => {
+            sectionObserver.observe(section);
+        });
+        
+
+        // Typing effect for home section
+    
+  const phrases = ["Software Engineer", "Developer", "Quick Learner", "Passionate Coder"];
+  let currentPhrase = 0;
+  let currentChar = 0;
+  const typingText = document.getElementById("typing-text");
+
+  function type() {
+    if (currentChar < phrases[currentPhrase].length) {
+      typingText.textContent += phrases[currentPhrase].charAt(currentChar);
+      currentChar++;
+      setTimeout(type, 100);
+    } else {
+      // Pause before showing next word (only if not last one)
+      if (currentPhrase < phrases.length - 1) {
+        setTimeout(() => {
+          erase();
+        }, 1500);
+      }
+    }
+  }
+
+  function erase() {
+    if (currentChar > 0) {
+      typingText.textContent = phrases[currentPhrase].substring(0, currentChar - 1);
+      currentChar--;
+      setTimeout(erase, 50);
+    } else {
+      currentPhrase++;
+      setTimeout(type, 500);
+    }
+  }
+
+  document.addEventListener("DOMContentLoaded", function () {
+    type();
+  });
+
+        // Skill bar animation on scroll
+        const skillBars = document.querySelectorAll('.skill-bar');
+        const skillObserver = new IntersectionObserver((entries, observer) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.classList.add('visible');
+                    observer.unobserve(entry.target);
+                }
+            });
+        }, {
+            threshold: 0.5
+        });
+
+        skillBars.forEach(bar => {
+            skillObserver.observe(bar);
+        });
+
+        // Certificate Dialog
+        function showCertificate(title, issuer, imageUrl, description) {
+            document.getElementById('cert-title').textContent = title;
+            document.getElementById('cert-issuer').textContent = issuer;
+            document.getElementById('cert-image').src = imageUrl;
+            document.getElementById('cert-description').textContent = description;
+            document.getElementById('certificate-dialog').style.display = 'flex';
+        }
+
+        function closeCertificate() {
+            document.getElementById('certificate-dialog').style.display = 'none';
+        }
+
+        // Load More/Less Certifications
+        const certCards = document.querySelectorAll('#certifications-grid .cert-card');
+        const loadMoreCertsBtn = document.getElementById('load-more-certs');
+        const loadLessCertsBtn = document.getElementById('load-less-certs');
+        const initialVisibleCerts = 3;
+
+        function showInitialCerts() {
+            certCards.forEach((card, index) => {
+                if (index < initialVisibleCerts) {
+                    card.classList.remove('hidden');
+                } else {
+                    card.classList.add('hidden');
+                }
+            });
+            loadMoreCertsBtn.classList.remove('hidden');
+            loadLessCertsBtn.classList.add('hidden');
+        }
+
+        loadMoreCertsBtn.addEventListener('click', () => {
+            certCards.forEach(card => card.classList.remove('hidden'));
+            loadMoreCertsBtn.classList.add('hidden');
+            loadLessCertsBtn.classList.remove('hidden');
+        });
+
+        loadLessCertsBtn.addEventListener('click', showInitialCerts);
+
+        // Initialize certifications display
+        showInitialCerts();
+
+        // Load More/Less Projects
+        const projectCards = document.querySelectorAll('#projects-grid .project-card');
+        const loadMoreProjectsBtn = document.getElementById('load-more-projects');
+        const loadLessProjectsBtn = document.getElementById('load-less-projects');
+        const initialVisibleProjects = 3;
+
+        function showInitialProjects() {
+            projectCards.forEach((card, index) => {
+                if (index < initialVisibleProjects) {
+                    card.classList.remove('hidden');
+                } else {
+                    card.classList.add('hidden');
+                }
+            });
+            loadMoreProjectsBtn.classList.remove('hidden');
+            loadLessProjectsBtn.classList.add('hidden');
+        }
+
+        loadMoreProjectsBtn.addEventListener('click', () => {
+            projectCards.forEach(card => card.classList.remove('hidden'));
+            loadMoreProjectsBtn.classList.add('hidden');
+            loadLessProjectsBtn.classList.remove('hidden');
+        });
+
+        loadLessProjectsBtn.addEventListener('click', showInitialProjects);
+
+        // Initialize projects display
+        showInitialProjects();
+
+        // Form Validation
+        const contactForm = document.getElementById('contact-form');
+        const nameInput = document.getElementById('name');
+        const emailInput = document.getElementById('email');
+        const messageInput = document.getElementById('message');
+        const nameError = document.getElementById('name-error');
+        const emailError = document.getElementById('email-error');
+        const messageError = document.getElementById('message-error');
+        const formSuccess = document.getElementById('form-success');
+
+        contactForm.addEventListener('submit', function(event) {
+            event.preventDefault(); // Prevent default form submission
+
+            let isValid = true;
+
+            // Name validation
+            if (nameInput.value.trim() === '') {
+                nameInput.classList.add('error');
+                nameError.classList.remove('hidden');
+                nameError.textContent = 'Name cannot be empty.';
+                isValid = false;
+            } else if (nameInput.value.trim().length < 2) {
+                nameInput.classList.add('error');
+                nameError.classList.remove('hidden');
+                nameError.textContent = 'Name must be at least 2 characters.';
+                isValid = false;
+            } else {
+                nameInput.classList.remove('error');
+                nameError.classList.add('hidden');
+            }
+
+            // Email validation
+            const emailPattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+            if (emailInput.value.trim() === '') {
+                emailInput.classList.add('error');
+                emailError.classList.remove('hidden');
+                emailError.textContent = 'Email cannot be empty.';
+                isValid = false;
+            } else if (!emailPattern.test(emailInput.value.trim())) {
+                emailInput.classList.add('error');
+                emailError.classList.remove('hidden');
+                emailError.textContent = 'Please enter a valid email address.';
+                isValid = false;
+            } else {
+                emailInput.classList.remove('error');
+                emailError.classList.add('hidden');
+            }
+
+            // Message validation
+            if (messageInput.value.trim() === '') {
+                messageInput.classList.add('error');
+                messageError.classList.remove('hidden');
+                messageError.textContent = 'Message cannot be empty.';
+                isValid = false;
+            } else if (messageInput.value.trim().length < 10) {
+                messageInput.classList.add('error');
+                messageError.classList.remove('hidden');
+                messageError.textContent = 'Message must be at least 10 characters.';
+                isValid = false;
+            } else {
+                messageInput.classList.remove('error');
+                messageError.classList.add('hidden');
+            }
+
+            if (isValid) {
+                // Here you would typically send the form data to a server
+                // For demonstration, we'll just show a success message
+                formSuccess.classList.remove('hidden');
+                contactForm.reset(); // Clear the form
+                setTimeout(() => {
+                    formSuccess.classList.add('hidden');
+                }, 5000); // Hide success message after 5 seconds
+            }
+        });
+    </script>
+</body>
+</html>
